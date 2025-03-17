@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MACRINE Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #190826;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 182px;
+            background-color: #1e0e2c;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-container {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-svg {
+            width: 26px;
+            height: 26px;
+            margin-right: 8px;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: background-color 0.2s;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-item.active {
+            background-color: rgba(147, 51, 234, 0.3);
+            color: white;
+            border-left: 3px solid #9333ea;
+        }
+
+        .menu-item i {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        .menu-item .arrow {
+            position: absolute;
+            right: 16px;
+        }
+
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            position: absolute;
+            right: 16px;
+        }
+
+        .menu-spacer {
+            flex-grow: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(25, 8, 38, 0.95), rgba(25, 8, 38, 0.8)), url('/api/placeholder/400/320');
+            background-size: cover;
+            overflow-y: auto;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* About Section */
+        .about-section {
+            background-color: rgba(68, 31, 84, 0.7);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .about-section h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .about-section p {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .know-more {
+            color: #38bdf8;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background-color: rgba(68, 31, 84, 0.7);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            height: fit-content;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-circle-bg {
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 8;
+            fill: none;
+        }
+
+        .progress-circle {
+            stroke: #9333ea;
+            stroke-width: 8;
+            fill: none;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.3s;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-text .percentage {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .progress-text .label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(41, 18, 54, 0.7);
+            border-radius: 12px;
+            width: 45%;
+        }
+
+        .stat-box h3 {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+        }
+
+        .stat-box .value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .stat-box .growth {
+            color: #10b981;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            background-color: rgba(68, 31, 84, 0.7);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #6b7280;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            background-color: rgba(17, 24, 39, 0.7);
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .message-content p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message-input {
+            display: flex;
+            background-color: rgba(17, 24, 39, 0.7);
+            border-radius: 100px;
+            padding: 8px 16px;
+            margin-top: auto;
+        }
+
+        .message-input input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 0;
+            outline: none;
+        }
+
+        .message-input button {
+            background: transparent;
+            border: none;
+            color: #38bdf8;
+            cursor: pointer;
+            padding: 0 8px;
+        }
+
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="6" height="20" fill="white" />
+                <rect x="39" y="5" width="6" height="20" fill="white" />
+                <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
+                <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
+                <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
+                <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
+                <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
+            </svg>
+            <div class="logo">KGXperience</div>
+        </div>
+
+        <a href="#" class="menu-item active">
+            <i>◻</i>
+            Dashboard
+        </a>
+        <a href="#" class="menu-item">
+            <i>👤</i>
+            Profile
+            <span class="arrow">›</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i>📊</i>
+            Learn by Practice
+            <span class="arrow">›</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i>📶</i>
+            Wi-Fi
+        </a>
+        <a href="#" class="menu-item">
+            <i>📅</i>
+            Work on Holidays
+        </a>
+        <a href="#" class="menu-item">
+            <i>📦</i>
+            Inventory
+        </a>
+        <a href="#" class="menu-item">
+            <i>🏆</i>
+            Hackathons / Events
+            <span class="notification-dot"></span>
+        </a>
+        <a href="#" class="menu-item">
+            <i>⭐</i>
+            Internships
+        </a>
+        <a href="#" class="menu-item">
+            <i>📞</i>
+            Contact us
+        </a>
+
+        <div class="menu-spacer"></div>
+
+        <a href="#" class="menu-item">
+            <i>🚪</i>
+            Logout
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="dashboard-container">
+            <!-- About Section -->
+            <div class="about-section">
+                <h2>About us</h2>
+                <p>KGiSL Innovation cell (KGX) was established with the intention of encouraging young minds fuelling their entrepreneurial initiatives by solving real world problems. KGX identifies the entrepreneurial aspirants from KGiSL Institute of Technology and facilitates them to bring their idea into a viable product and eventually build a startup...</p>
+                <a href="#" class="know-more">Know more</a>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="progress-container">
+                    <svg class="progress-ring" width="160" height="160">
+                        <circle class="progress-circle-bg" cx="80" cy="80" r="70"></circle>
+                        <circle class="progress-circle" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="132"></circle>
+                    </svg>
+                    <div class="progress-text">
+                        <div class="percentage">70 %</div>
+                        <div class="label">completed</div>
+                    </div>
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <h3>Invited</h3>
+                        <div class="value">40</div>
+                        <div class="label">people</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Bonus</h3>
+                        <div class="value">33.0</div>
+                        <div class="growth">+25%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Section -->
+            <div class="chat-section">
+                <div class="chat-messages">
+                    <div class="message">
+                        <div class="avatar">
+                            <img src="/api/placeholder/36/36" alt="User avatar">
+                        </div>
+                        <div class="message-content">
+                            <p>SpaceX successfully launched its Starship rocket, achieving its first soft ocean landing (World Economic Forum).</p>
+                        </div>
+                    </div>
+
+                    <div class="message">
+                        <div class="avatar">
+                            <img src="/api/placeholder/36/36" alt="User avatar">
+                        </div>
+                        <div class="message-content">
+                            <p>SpaceX successfully launched its Starship rocket, achieving its first soft ocean landing. They plan to build one Starship daily at the new South Texas Starfactory (World Economic Forum).</p>
+                        </div>
+                    </div>
+
+                    <div class="message">
+                        <div class="avatar">
+                            <img src="/api/placeholder/36/36" alt="User avatar">
+                        </div>
+                        <div class="message-content">
+                            <p>SpaceX successfully launched its Starship rocket, achieving its first soft ocean landing. They plan to build one Starship daily at the new South Texas Starfactory (World Economic Forum).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-input">
+                    <input type="text" placeholder="Add a message">
+                    <button>➡️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calculate the stroke dashoffset for the progress circle
+        document.addEventListener('DOMContentLoaded', function() {
+            const circle = document.querySelector('.progress-circle');
+            const radius = circle.getAttribute('r');
+            const circumference = 2 * Math.PI * radius;
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            
+            // Set to 70% completion
+            const offset = circumference - (70 / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        });
+    </script>
+</body>
+</html>
