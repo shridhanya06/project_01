@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGXperience - Hackathons</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #111;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .logo-svg {
+            width: 40px; /* Adjust size of the SVG */
+            height: 40px;
+            margin-right: 10px; /* Spacing between SVG and text */
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo-symbol {
+            font-size: 30px;
+            margin-right: 5px;
+        }
+
+        .logo-x {
+            color: #ff0000;
+        }
+
+
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 220px;
+            background-color: #111;
+            height: 100vh;
+            padding: 20px 0;
+            border-right: 1px solid #333;
+        }
+
+        
+
+        .menu-items {
+            list-style: none;
+            margin-top: 90px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .menu-item:hover {
+            background-color: #222;
+        }
+
+        .menu-item.active {
+            background-color: #4b134f;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logout i {
+            margin-right: 10px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: left;
+            margin-bottom: 30px;
+            margin-left: 100px;
+        }
+
+        .search-bar {
+            background-color: #222;
+            border: none;
+            padding: 10px 10px;
+            width: 400px;
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .search-bar::placeholder {
+            color: #888;
+        }
+
+        /* Profile icon */
+        .profile-icon {
+            background-color: #1e1e1e;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+
+        /* Gallery container with position relative for absolute positioning */
+        .hackathon-gallery {
+            position: relative;
+            width: 100%;
+            height: 800px; /* Set an appropriate height to contain all cards */
+        }
+
+        .hackathon-card {
+            position: absolute;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .hackathon-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .hackathon-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Fixed box sizes with absolute positioning as per new requirements */
+        .box-1 {
+            width: 224px;
+            height: 400px;
+            top: 0;
+            left: 100px;
+        }
+
+        .box-2 {
+            width: 212px;
+            height: 300px;
+            top: 0;
+            left: 350px; /* box-1 width + gap */
+        }
+
+        .box-3 {
+            width: 531px;
+            height: 300px;
+            top: 0;
+            left: 600px; /* box-2 left + box-2 width + gap */
+        }
+
+        .box-4 {
+            width: 224px;
+            height: 324px;
+            top: 415px; /* box-1 height + gap */
+            left: 100px;
+        }
+
+        .box-5 {
+            width: 300px;
+            height: 300px;
+            top: 315px; /* box-2 height + gap */
+            left: 350px; /* same as box-2 left */
+        }
+
+        .box-6 {
+            width: 274px;
+            height: 385px;
+            top: 315px;
+            left: 680px; /* box-5 left + box-5 width + gap */
+        }
+
+        .box-7 {
+            width: 150px;
+            height: 145px;
+            top: 320px;
+            left: 1000px; /* box-6 left + box-6 width + gap */
+        }
+
+        .box-8 {
+            width: 150px;
+            height: 217px;
+            top: 490px; /* box-7 top + box-7 height + gap */
+            left: 1000px; /* Same as box-7 left */
+        }
+
+        /* New box 9 under box 5 */
+        .box-9 {
+            width: 300px;
+            height: 150px;
+            top: 630px; /* box-5 top + box-5 height + gap */
+            left: 350px; /* Same as box-5 left */
+        }
+
+        .box-10 {
+            width: 443px;
+            height: 22px;
+            top: 710px; /* box-5 top + box-5 height + gap */
+            left: 680px; /* Same as box-5 left */
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="6" height="20" fill="white" />
+            <rect x="39" y="5" width="6" height="20" fill="white" />
+            <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
+            <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
+            <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
+            <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
+            <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
+        </svg>
+        <div class="logo">MACRINE</div>
+    </div>
+    <!-- Sidebar -->
+   
+        <ul class="menu-items">
+            <li class="menu-item">
+                <i>📊</i> Dashboard
+            </li>
+            <li class="menu-item">
+                <i>👤</i> Profile
+            </li>
+            <li class="menu-item">
+                <i>📚</i> Learn by Practice
+            </li>
+            <li class="menu-item">
+                <i>📡</i> WI-FI
+            </li>
+            <li class="menu-item">
+                <i>🗓️</i> Work on Holidays
+            </li>
+            <li class="menu-item">
+                <i>📋</i> Inventory
+            </li>
+            <li class="menu-item active">
+                <i>🏆</i> Hackathons / Events
+            </li>
+            <li class="menu-item">
+                <i>💼</i> Internships
+            </li>
+            <li class="menu-item">
+                <i>📞</i> Contact us
+            </li>
+        </ul>
+        <div class="logout">
+            <i>🚪</i> Logout
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search">
+            <div class="profile-icon">
+                <i>➕</i>
+            </div>
+        </div>
+
+        <div class="hackathon-gallery">
+            <!-- All boxes with fixed dimensions and absolute positioning -->
+            <div class="hackathon-card box-1">
+                <img src="../static/hackathons/img1.png" alt="U HACK '22">
+            </div>
+            <div class="hackathon-card box-2">
+                <img src="../static/hackathons/img2.png" alt="24h Hackathon">
+            </div>
+            <div class="hackathon-card box-3">
+                <img src="../static/hackathons/img3.png" alt="H4CK4THON">
+            </div>
+            <div class="hackathon-card box-4">
+                <img src="../static/hackathons/img4.png" alt="EuroTeQ Hackathon">
+            </div>
+            <div class="hackathon-card box-5">
+                <img src="../static/hackathons/img5.png" alt="CODE HACKATHON">
+            </div>
+            <div class="hackathon-card box-6">
+                <img src="../static/hackathons/img6.png" alt="Hackathon">
+            </div>
+            <div class="hackathon-card box-7">
+                <img src="../static/hackathons/img7.png" alt="#HackaTMe">
+            </div>
+            <div class="hackathon-card box-8">
+                <img src="../static/hackathons/img8.png" alt="Hackathon Event">
+            </div>
+            <!-- New Box 9 added below Box 5 -->
+            <div class="hackathon-card box-9">
+                <img src="../static/hackathons/img9.png" alt="New Hackathon Event">
+            </div>
+            <div class="hackathon-card box-10">
+                <img src="../static/hackathons/img10.png" alt="New Hackathon Event">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

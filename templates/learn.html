@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGXperience - learn by Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #111;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .logo-svg {
+            width: 40px; /* Adjust size of the SVG */
+            height: 40px;
+            margin-right: 10px; /* Spacing between SVG and text */
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo-symbol {
+            font-size: 30px;
+            margin-right: 5px;
+        }
+
+        .logo-x {
+            color: #ff0000;
+        }
+
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 220px;
+            background-color: #111;
+            height: 100vh;
+            padding: 20px 0;
+            border-right: 1px solid #333;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+        }
+
+        .sidebar-header .logo {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .sidebar-header .logo span:first-child {
+            color: #ff9900;
+        }
+
+        .sidebar-header .logo span:last-child {
+            color: #3366ff;
+        }
+
+        .menu-items {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+           
+        }
+
+        .menu-item:hover {
+            background-color: #222;
+           
+        }
+
+        .menu-item.active {
+           
+            border-left: 3px solid #4b134f;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Styles for the "Learn by Practice" menu item */
+        .menu-item.expandable {
+            background-color: #4b134f; /* Violet background color */
+            border-radius: 8px;
+            margin: 0 10px;
+            width: calc(100% - 20px);
+            color: white;
+            position: relative;
+        }
+
+        /* Add a subtle hover effect that preserves the violet color but changes its shade */
+        .menu-item.expandable:hover {
+            background-color: #5c1960; /* Slightly lighter shade of violet when hovered */
+        }
+
+        /* Adjust the existing active class to work with the new expandable style */
+        .menu-item.expandable.active {
+            border-left: 3px solid #ff9900; /* You can keep an accent border if desired */
+        }
+        
+        .logout {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+           
+        }
+
+        .logout i {
+            margin-right: 10px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            margin-left: 100px;
+        }
+
+        .search-bar {
+            background-color: #222;
+            border: none;
+            padding: 10px 10px;
+            width: 400px;
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .search-bar::placeholder {
+            color: #888;
+        }
+
+        /* Category grid styles */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 40px 20px; /* Increased vertical gap to accommodate titles */
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Category container that holds both title and card */
+        .category-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-title-header {
+            font-size: 22px;
+
+            font-weight: bold;
+            padding-left: 80px;
+            
+        }
+
+        .category-card {
+            position: relative;
+            background-color: #222;
+            border-radius: 12px;
+            overflow: hidden;
+            width: 235px; /* Fixed width as specified */
+            height: 205px; /* Fixed height as specified */
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-card.purple {
+            background: linear-gradient(135deg, #4b0082, #8a2be2);
+        }
+
+        .category-card.dark {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+        }
+
+        .category-card img {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 203px;
+            width: 233px;
+            object-fit: cover;
+            border-radius: 30px;
+        }
+
+        .category-content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .category-description {
+            font-size: 14px;
+            opacity: 5;
+            max-width: 70%;
+            line-height: 1.4;
+        }
+        
+        /* Icon styles for sidebar */
+        .icon-dashboard, .icon-profile, .icon-learn, .icon-wifi,
+        .icon-holidays, .icon-inventory, .icon-hackathons,
+        .icon-internships, .icon-contact, .icon-logout {
+            font-style: normal;
+        }
+
+        .icon-dashboard::before { content: "📊"; }
+        .icon-profile::before { content: "👤"; }
+        .icon-learn::before { content: "📚"; }
+        .icon-wifi::before { content: "📡"; }
+        .icon-holidays::before { content: "🗓️"; }
+        .icon-inventory::before { content: "📋"; }
+        .icon-hackathons::before { content: "🏆"; }
+        .icon-internships::before { content: "💼"; }
+        .icon-contact::before { content: "📞"; }
+        .icon-logout::before { content: "🚪"; }
+        
+        /* Active indicator dot for menu items */
+        .active-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="5" y="5" width="6" height="20" fill="white" />
+                    <rect x="39" y="5" width="6" height="20" fill="white" />
+                    <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
+                    <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
+                    <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
+                    <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
+                    <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
+                </svg>
+                <div class="logo">MACRINE</div>
+            </div>
+        </div>
+        <ul class="menu-items">
+            <li class="menu-item active">
+                <i class="icon-dashboard"></i> Dashboard
+            </li>
+            <li class="menu-item">
+                <i class="icon-profile"></i> Profile
+            </li>
+            <li class="menu-item expandable">
+                <i class="icon-learn"></i> Learn by Practice
+            </li>
+            <li class="menu-item">
+                <i class="icon-wifi"></i> WI-FI
+            </li>
+            <li class="menu-item">
+                <i class="icon-holidays"></i> Work on Holidays
+            </li>
+            <li class="menu-item">
+                <i class="icon-inventory"></i> Inventory
+            </li>
+            <li class="menu-item">
+                <i class="icon-hackathons"></i> Hackathons / Events
+                <span class="active-indicator"></span>
+            </li>
+            <li class="menu-item">
+                <i class="icon-internships"></i> Internships
+            </li>
+            <li class="menu-item">
+                <i class="icon-contact"></i> Contact us
+            </li>
+        </ul>
+        <div class="logout">
+            <i class="icon-logout"></i> Logout
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search">
+        </div>
+
+        <div class="category-grid">
+            <!-- Robotics -->
+            <div class="category-container">
+                <div class="category-title-header">Robotics</div>
+                <div class="category-card dark">
+                    <div class="category-content">
+                        <div class="category-description">build your first Robot!</div>
+                    </div>
+                    <img src="../static/learn/one.png" alt="Robot">
+                </div>
+            </div>
+
+            <!-- IOT -->
+            <div class="category-container">
+                <div class="category-title-header">IOT</div>
+                <div class="category-card purple">
+                    <div class="category-content">
+                        <div class="category-description">build your own Arduino!</div>
+                    </div>
+                    <img src="../static/learn/two.png" alt="Arduino">
+                </div>
+            </div>
+
+            <!-- AI & ML -->
+            <div class="category-container">
+                <div class="category-title-header">AI & ML</div>
+                <div class="category-card dark">
+                    <div class="category-content">
+                        <div class="category-description">build a substitute for the human brain!</div>
+                    </div>
+                    <img src="../static/learn/three.png" alt="AI">
+                </div>
+            </div>
+
+            <!-- UI / UX -->
+            <div class="category-container">
+                <div class="category-title-header">UI / UX</div>
+                <div class="category-card dark">
+                    <div class="category-content">
+                        <!-- Empty content div for consistent styling -->
+                    </div>
+                    <img src="../static/learn/four.png" alt="UI/UX">
+                </div>
+            </div>
+
+            <!-- Autonomous Vehicle -->
+           <!-- Autonomous Vehicle -> Autonomous Vehicles -->
+<div class="category-container">
+    <div class="category-title-header">Autonomous Vehicles</div>
+    <div class="category-card purple">
+        <div class="category-content">
+            <div class="category-description">Wanna work with LIDAR?</div>
+        </div>
+        <img src="../static/learn/five.png" alt="Autonomous Vehicle">
+    </div>
+</div>
+
+<!-- Software development -> Software Development -->
+<div class="category-container">
+    <div class="category-title-header">Software Development</div>
+    <div class="category-card dark">
+        <div class="category-content">
+            <div class="category-description">Develop you own software!</div>
+        </div>
+        <img src="../static/learn/six.png" alt="Software">
+    </div>
+</div>
+</body>
+</html>
