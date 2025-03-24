@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGXperience - learn by Practice</title>
+    <title>Profile Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -18,48 +19,48 @@
             background-color: #111;
             color: white;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* Toggle for mobile menu */
+        /* Checkbox hack for mobile menu toggle */
         #menu-toggle {
             display: none;
         }
 
-        #menu-toggle:checked ~ .sidebar {
-            transform: translateX(0);
-        }
-
-        #menu-toggle:checked ~ .main-content {
-            margin-left: 0;
-        }
-
-        .menu-icon {
+        .menu-toggle-label {
             display: none;
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 1.2rem;
+            right: 1.2rem;
             z-index: 100;
+            color: white;
+            font-size: 1.5rem;
             cursor: pointer;
-            background-color: #333;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .menu-icon span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background-color: white;
-            margin: 5px 0;
         }
 
         .logo-container {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
             display: flex;
             align-items: center;
-            padding: 20px;
+            z-index: 50;
         }
 
+        .logo-container-pc {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            display: flex;
+            align-items: center;
+            z-index: 50;
+        }
+
+        @media (min-width:768px){
+            .logo-container-pc{
+                display: none;
+            }
+        }
+        
         .logo-svg {
             width: 40px;
             height: 40px;
@@ -67,8 +68,17 @@
         }
 
         .logo {
-            font-size: 20px;
+            font-size: 1.2rem;
             font-weight: bold;
+        }
+
+        .logo-symbol {
+            font-size: 30px;
+            margin-right: 5px;
+        }
+
+        .logo-x {
+            color: #ff0000;
         }
 
         /* Sidebar styles */
@@ -79,28 +89,32 @@
             padding: 20px 0;
             border-right: 1px solid #333;
             position: fixed;
-            z-index: 90;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
             transition: transform 0.3s ease;
         }
-
-        .sidebar-header {
-            padding: 20px;
-            display: flex;
-        }
-
+        
         .menu-items {
             list-style: none;
-            margin-top: 30px;
-            overflow-y: auto;
-            max-height: calc(100vh - 200px);
+            margin-top: 10vh;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 0;
             cursor: pointer;
             transition: background-color 0.3s;
+        }
+
+        .menu-item a, .logout a {
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 20px;
         }
 
         .menu-item:hover {
@@ -108,32 +122,15 @@
         }
 
         .menu-item.active {
-            border-left: 3px solid #4b134f;
+            background-color: #4b134f;
         }
 
-        .menu-item i {
+        .menu-item i, .logout i {
             margin-right: 10px;
             width: 20px;
             text-align: center;
         }
 
-        .menu-item.expandable {
-            background-color: #4b134f;
-            border-radius: 8px;
-            margin: 0 10px;
-            width: calc(100% - 20px);
-            color: white;
-            position: relative;
-        }
-
-        .menu-item.expandable:hover {
-            background-color: #5c1960;
-        }
-
-        .menu-item.expandable.active {
-            border-left: 3px solid #ff9900;
-        }
-        
         .logout {
             position: absolute;
             bottom: 20px;
@@ -142,8 +139,18 @@
             align-items: center;
         }
 
-        .logout i {
-            margin-right: 10px;
+        /* Overlay for mobile menu */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 80;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
         }
 
         /* Main content styles */
@@ -156,19 +163,17 @@
 
         .search-container {
             display: flex;
-            justify-content: center;
+            justify-content: left;
             margin-bottom: 30px;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-left: 100px;
         }
 
         .search-bar {
             background-color: #222;
             border: none;
-            padding: 10px 15px;
+            padding: 10px 10px;
             width: 100%;
+            max-width: 400px;
             border-radius: 10px;
             color: white;
             outline: none;
@@ -178,223 +183,306 @@
             color: #888;
         }
 
-        /* Category grid styles */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
-            gap: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Profile section */
+        .profile-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
         }
 
-        .category-container {
+        .profile-left {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 30px;
+            border-right: 1px solid #333;
+            box-shadow: 5px 0 15px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-right {
+            flex: 1;
+            min-width: 200px;
+            padding-left: 20px;
+        }
+
+        .profile-header {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            justify-self: center;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .category-title-header {
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .category-card {
-            position: relative;
-            background-color: #222;
-            border-radius: 12px;
-            overflow: hidden;
-            width: 235px;
-            height: 205px;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .category-card.purple {
-            background: linear-gradient(135deg, #4b0082, #8a2be2);
-        }
-
-        .category-card.dark {
-            background: linear-gradient(135deg, #1a1a1a, #333);
-        }
-
-        .category-card img {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            height: 100%;
+        .profile-image {
             width: 100%;
+            max-width: 356px;
+            height: auto;
+            aspect-ratio: 356/459;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
+        
+        .profile-details {
+            margin-top: 30px;
+        }
 
-        .category-content {
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-            height: 100%;
+        .detail-item {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
-        .category-description {
+        .detail-label {
+            width: 120px;
+            color: #888;
+        }
+
+        .detail-value {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        /* Right side content */
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .add-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .activities-list {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .activities-list li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .activities-list li:before {
+            content: "•";
+            position: absolute;
+            left: -15px;
+        }
+
+        .accomplishments {
+            text-decoration: underline;
+            text-underline-offset: 5px;
+            margin-top: 40px;
+        }
+
+        .skills {
+            margin-top: 50px;
+            font-weight: 300;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .skill-badge {
+            background-color: rgba(88, 4, 117, 1);
+            padding: 8px 15px;
+            border-radius: 20px;
             font-size: 14px;
-            opacity: 0.9;
-            max-width: 70%;
-            line-height: 1.4;
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 5px;
-            border-radius: 5px;
-        }
-        
-        /* Icon styles for sidebar */
-        .icon-dashboard, .icon-profile, .icon-learn, .icon-wifi,
-        .icon-holidays, .icon-inventory, .icon-hackathons,
-        .icon-internships, .icon-contact, .icon-logout {
-            font-style: normal;
+            box-shadow: inset 0px 0px 5px rgba(88, 4, 117, 1);
+            margin-bottom: 10px;
         }
 
-        .icon-dashboard::before { content: "📊"; }
-        .icon-profile::before { content: "👤"; }
-        .icon-learn::before { content: "📚"; }
-        .icon-wifi::before { content: "📡"; }
-        .icon-holidays::before { content: "🗓️"; }
-        .icon-inventory::before { content: "📋"; }
-        .icon-hackathons::before { content: "🏆"; }
-        .icon-internships::before { content: "💼"; }
-        .icon-contact::before { content: "📞"; }
-        .icon-logout::before { content: "🚪"; }
+        .activities-card {
+            background-color: rgba(41, 41, 39, 1);
+            width: 100%;
+            max-width: 290px;
+            min-height: 260px;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(136, 105, 105, 1);
+        }
         
-        /* Active indicator dot for menu items */
-        .active-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: #4CAF50;
-            border-radius: 50%;
-            margin-left: 10px;
+        .mentor-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            margin-top: 20px;
+            font-size: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .mentor-label {
+            color: #888;
+            margin-right: 5px;
         }
 
-        /* Media Queries for responsiveness */
-        @media (max-width: 768px) {
-            body {
+        /* Checkbox hack for menu toggle */
+        #menu-toggle:checked ~ .sidebar {
+            transform: translateX(0);
+        }
+
+        #menu-toggle:checked ~ .overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 992px) {
+            .profile-container {
                 flex-direction: column;
             }
 
-            .menu-icon {
+            .profile-left {
+                width: 100%;
+                border-right: none;
+                box-shadow: none;
+                border-bottom: 1px solid #333;
+                padding-right: 0;
+                padding-bottom: 30px;
+            }
+
+            .profile-right {
+                width: 100%;
+                padding-left: 0;
+            }
+
+            .search-container {
+                margin-left: 0;
+                justify-content: center;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-toggle-label {
                 display: block;
             }
 
             .sidebar {
-                width: 80%;
-                max-width: 300px;
                 transform: translateX(-100%);
+                z-index: 90;
             }
 
             .main-content {
                 margin-left: 0;
-                padding: 15px;
+                padding: 20px;
+                padding-top: 70px;
             }
 
-            .search-container {
-                margin-top: 40px;
-                margin-bottom: 20px;
-            }
 
-            .category-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 30px 15px;
-            }
-
-            .category-card {
-                width: 100%;
-                max-width: 235px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .category-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .category-container {
-                width: 100%;
-            }
-
-            .category-card {
-                width: 100%;
+            .activities-card {
                 max-width: 100%;
             }
 
-            .search-container {
-                margin-top: 60px;
+            .activities-list {
+                margin-left: 20px;
+            }
+
+            .skills-container {
+                justify-content: flex-start;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .detail-item {
+                flex-direction: column;
+            }
+
+            .detail-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .detail-value {
+                width: 100%;
+            }
+
+            .search-bar {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Mobile Menu Toggle -->
+    <!-- Checkbox hack for mobile menu toggle -->
     <input type="checkbox" id="menu-toggle">
-    <label for="menu-toggle" class="menu-icon">
-        <span></span>
-        <span></span>
-        <span></span>
-    </label>
+    <label for="menu-toggle" class="menu-toggle-label">☰</label>
+    
+    <div class="logo-container-pc">
+        <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="6" height="20" fill="white" />
+            <rect x="39" y="5" width="6" height="20" fill="white" />
+            <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
+            <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
+            <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
+            <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
+            <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
+        </svg>
+        <div class="logo">MACRINE</div>
+    </div>
+
+    <div class="overlay"></div>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo-container">
-                <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="5" y="5" width="6" height="20" fill="white" />
-                    <rect x="39" y="5" width="6" height="20" fill="white" />
-                    <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
-                    <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
-                    <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
-                    <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
-                    <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
-                </svg>
-                <div class="logo">MACRINE</div>
-            </div>
+        <div class="logo-container">
+            <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="6" height="20" fill="white" />
+                <rect x="39" y="5" width="6" height="20" fill="white" />
+                <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
+                <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
+                <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
+                <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
+                <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
+            </svg>
+            <div class="logo">MACRINE</div>
         </div>
         <ul class="menu-items">
+            <li class="menu-item">
+                <a href="dashboard.html"><i>📊</i> Dashboard</a>
+            </li>
             <li class="menu-item active">
-                <i class="icon-dashboard"></i> Dashboard
+                <a href="profile.html"><i>👤</i> Profile</a>
             </li>
             <li class="menu-item">
-                <i class="icon-profile"></i> Profile
-            </li>
-            <li class="menu-item expandable">
-                <i class="icon-learn"></i> Learn by Practice
+                <a href="learn.html"><i>📚</i> Learn by Practice</a>
             </li>
             <li class="menu-item">
-                <i class="icon-wifi"></i> WI-FI
+                <a href="wifi.html"><i>📡</i> WI-FI</a>
             </li>
             <li class="menu-item">
-                <i class="icon-holidays"></i> Work on Holidays
+                <a href="holidays.html"><i>🗓️</i> Work on Holidays</a>
             </li>
             <li class="menu-item">
-                <i class="icon-inventory"></i> Inventory
+                <a href="inventory.html"><i>📋</i> Inventory</a>
             </li>
             <li class="menu-item">
-                <i class="icon-hackathons"></i> Hackathons / Events
-                <span class="active-indicator"></span>
+                <a href="events.html"><i>🏆</i> Hackathons / Events</a>
             </li>
             <li class="menu-item">
-                <i class="icon-internships"></i> Internships
+                <a href="internships.html"><i>💼</i> Internships</a>
             </li>
             <li class="menu-item">
-                <i class="icon-contact"></i> Contact us
+                <a href="contact.html"><i>📞</i> Contact us</a>
             </li>
         </ul>
         <div class="logout">
-            <i class="icon-logout"></i> Logout
+            <a href="logout.html"><i>🚪</i> Logout</a>
         </div>
     </div>
 
@@ -404,70 +492,81 @@
             <input type="text" class="search-bar" placeholder="Search">
         </div>
 
-        <div class="category-grid">
-            <!-- Robotics -->
-            <div class="category-container">
-                <div class="category-title-header">Robotics</div>
-                <div class="category-card dark">
-                    <div class="category-content">
-                        <div class="category-description">build your first Robot!</div>
+        <div class="profile-container">
+            <!-- Left side - Profile info -->
+            <div class="profile-left">
+                <div class="profile-header">
+                    <div class="profile-image">   
+                        <img src="../static/profile.png" alt="Vasken Mouradian">
                     </div>
-                    <img src="../static/learn/one.png" alt="Robot">
+                    <div class="social-icons">
+
+                    </div>
+                </div>
+
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Roll no</div>
+                        <div class="detail-value">: 22AIB17</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Year</div>
+                        <div class="detail-value">: II</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Domain</div>
+                        <div class="detail-value">: AI & ML</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Mail ID (Personal)</div>
+                        <div class="detail-value">: vaskenmouradian265@gmail.com</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Mail ID (College)</div>
+                        <div class="detail-value">: vaskenmouradian_22ai16@kgkite.ac.in</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- IOT -->
-            <div class="category-container">
-                <div class="category-title-header">IOT</div>
-                <div class="category-card purple">
-                    <div class="category-content">
-                        <div class="category-description">build your own Arduino!</div>
-                    </div>
-                    <img src="../static/learn/two.png" alt="Arduino">
+            <!-- Right side - Activities and Skills -->
+            <div class="profile-right">
+                <!-- Mentor info moved above the activities box -->
+                <div class="mentor-info">
+                    <span class="mentor-label">Mentor</span>
+                    <span>: Akil Kumar K</span>
                 </div>
-            </div>
-
-            <!-- AI & ML -->
-            <div class="category-container">
-                <div class="category-title-header">AI & ML</div>
-                <div class="category-card dark">
-                    <div class="category-content">
-                        <div class="category-description">build a substitute for the human brain!</div>
+                
+                <div class="activities-card">
+                    <div class="section-title">
+                        <h3>Other Activities</h3>
+                        <button class="add-button">+</button>
                     </div>
-                    <img src="../static/learn/three.png" alt="AI">
+                    <ul class="activities-list">
+                        <li>Communication</li>
+                        <li>Leadership</li>
+                        <li>Teamwork</li>
+                        <li>Adaptability</li>
+                        <li>Volunteering</li>
+                        <li>Hosting</li>
+                    </ul>
                 </div>
-            </div>
 
-            <!-- UI / UX -->
-            <div class="category-container">
-                <div class="category-title-header">UI / UX</div>
-                <div class="category-card dark">
-                    <div class="category-content">
-                        <!-- Empty content div for consistent styling -->
-                    </div>
-                    <img src="../static/learn/four.png" alt="UI/UX">
+                <div class="accomplishments">
+                    <h3>Accomplishments</h3>
                 </div>
-            </div>
 
-            <!-- Autonomous Vehicles -->
-            <div class="category-container">
-                <div class="category-title-header">Autonomous Vehicles</div>
-                <div class="category-card purple">
-                    <div class="category-content">
-                        <div class="category-description">Wanna work with LIDAR?</div>
+                <div class="skills">
+                    <div class="section-title">
+                        <h3>Skills</h3>
+                        <button class="add-button">+</button>
                     </div>
-                    <img src="../static/learn/five.png" alt="Autonomous Vehicle">
-                </div>
-            </div>
-
-            <!-- Software Development -->
-            <div class="category-container">
-                <div class="category-title-header">Software Development</div>
-                <div class="category-card dark">
-                    <div class="category-content">
-                        <div class="category-description">Develop you own software!</div>
+                    <div class="skills-container">
+                        <div class="skill-badge">HTML</div>
+                        <div class="skill-badge">CSS/SCSS</div>
+                        <div class="skill-badge">JavaScript</div>
+                        <div class="skill-badge">TypeScript</div>
+                        <div class="skill-badge">CSS/SCSS</div>
                     </div>
-                    <img src="../static/learn/six.png" alt="Software">
                 </div>
             </div>
         </div>

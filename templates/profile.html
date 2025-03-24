@@ -45,6 +45,21 @@
             align-items: center;
             z-index: 50;
         }
+
+        .logo-container-pc {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            display: flex;
+            align-items: center;
+            z-index: 50;
+        }
+
+        @media (min-width:768px){
+            .logo-container-pc{
+                display: none;
+            }
+        }
         
         .logo-svg {
             width: 40px;
@@ -82,15 +97,24 @@
         
         .menu-items {
             list-style: none;
-            margin-top: 90px;
+            margin-top: 10vh;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 0;
             cursor: pointer;
             transition: background-color 0.3s;
+        }
+
+        .menu-item a, .logout a {
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 20px;
         }
 
         .menu-item:hover {
@@ -101,7 +125,7 @@
             background-color: #4b134f;
         }
 
-        .menu-item i {
+        .menu-item i, .logout i {
             margin-right: 10px;
             width: 20px;
             text-align: center;
@@ -113,10 +137,6 @@
             left: 20px;
             display: flex;
             align-items: center;
-        }
-
-        .logout i {
-            margin-right: 10px;
         }
 
         /* Overlay for mobile menu */
@@ -182,7 +202,7 @@
 
         .profile-right {
             flex: 1;
-            min-width: 300px;
+            min-width: 200px;
             padding-left: 20px;
         }
 
@@ -364,9 +384,6 @@
                 padding-top: 70px;
             }
 
-            .logo-container {
-                z-index: 95;
-            }
 
             .activities-card {
                 max-width: 100%;
@@ -406,7 +423,7 @@
     <input type="checkbox" id="menu-toggle">
     <label for="menu-toggle" class="menu-toggle-label">☰</label>
     
-    <div class="logo-container">
+    <div class="logo-container-pc">
         <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="5" y="5" width="6" height="20" fill="white" />
             <rect x="39" y="5" width="6" height="20" fill="white" />
@@ -423,37 +440,49 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
+        <div class="logo-container">
+            <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="6" height="20" fill="white" />
+                <rect x="39" y="5" width="6" height="20" fill="white" />
+                <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
+                <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
+                <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
+                <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
+                <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
+            </svg>
+            <div class="logo">MACRINE</div>
+        </div>
         <ul class="menu-items">
             <li class="menu-item">
-                <i>📊</i> Dashboard
+                <a href="dashboard.html"><i>📊</i> Dashboard</a>
             </li>
             <li class="menu-item active">
-                <i>👤</i> Profile
+                <a href="profile.html"><i>👤</i> Profile</a>
             </li>
             <li class="menu-item">
-                <i>📚</i> Learn by Practice
+                <a href="learn.html"><i>📚</i> Learn by Practice</a>
             </li>
             <li class="menu-item">
-                <i>📡</i> WI-FI
+                <a href="wifi.html"><i>📡</i> WI-FI</a>
             </li>
             <li class="menu-item">
-                <i>🗓️</i> Work on Holidays
+                <a href="holidays.html"><i>🗓️</i> Work on Holidays</a>
             </li>
             <li class="menu-item">
-                <i>📋</i> Inventory
+                <a href="inventory.html"><i>📋</i> Inventory</a>
             </li>
             <li class="menu-item">
-                <i>🏆</i> Hackathons / Events
+                <a href="events.html"><i>🏆</i> Hackathons / Events</a>
             </li>
             <li class="menu-item">
-                <i>💼</i> Internships
+                <a href="internships.html"><i>💼</i> Internships</a>
             </li>
             <li class="menu-item">
-                <i>📞</i> Contact us
+                <a href="contact.html"><i>📞</i> Contact us</a>
             </li>
         </ul>
         <div class="logout">
-            <i>🚪</i> Logout
+            <a href="logout.html"><i>🚪</i> Logout</a>
         </div>
     </div>
 
