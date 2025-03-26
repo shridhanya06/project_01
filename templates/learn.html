@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGXperience - learn by Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #111;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Toggle for mobile menu */
+        #menu-toggle {
+            display: none;
+        }
+
+        #menu-toggle:checked ~ .sidebar {
+            transform: translateX(0);
+        }
+
+        #menu-toggle:checked ~ .main-content {
+            margin-left: 0;
+        }
+
+        .menu-icon {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .menu-icon span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo-svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 220px;
+            background-color: #111;
+            height: 100vh;
+            padding: 20px 0;
+            border-right: 1px solid #333;
+            position: fixed;
+            z-index: 90;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+        }
+
+        .menu-items {
+            list-style: none;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .menu-item:hover {
+            background-color: #222;
+        }
+
+        .menu-item.active {
+            border-left: 3px solid #4b134f;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item.expandable {
+            background-color: #4b134f;
+            border-radius: 8px;
+            margin: 0 10px;
+            width: calc(100% - 20px);
+            color: white;
+            position: relative;
+        }
+
+        .menu-item.expandable:hover {
+            background-color: #5c1960;
+        }
+
+        .menu-item.expandable.active {
+            border-left: 3px solid #ff9900;
+        }
+        
+        .logout {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logout i {
+            margin-right: 10px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 220px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-bar {
+            background-color: #222;
+            border: none;
+            padding: 10px 15px;
+            width: 100%;
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .search-bar::placeholder {
+            color: #888;
+        }
+
+        /* Category grid styles */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+            gap: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-self: center;
+        }
+
+        .category-title-header {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .category-card {
+            position: relative;
+            background-color: #222;
+            border-radius: 12px;
+            overflow: hidden;
+            width: 235px;
+            height: 205px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-card.purple {
+            background: linear-gradient(135deg, #4b0082, #8a2be2);
+        }
+
+        .category-card.dark {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+        }
+
+        .category-card img {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .category-content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .category-description {
+            font-size: 14px;
+            opacity: 0.9;
+            max-width: 70%;
+            line-height: 1.4;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 5px;
+            border-radius: 5px;
+        }
+        
+        /* Icon styles for sidebar */
+        .icon-dashboard, .icon-profile, .icon-learn, .icon-wifi,
+        .icon-holidays, .icon-inventory, .icon-hackathons,
+        .icon-internships, .icon-contact, .icon-logout {
+            font-style: normal;
+        }
+
+        .icon-dashboard::before { content: "📊"; }
+        .icon-profile::before { content: "👤"; }
+        .icon-learn::before { content: "📚"; }
+        .icon-wifi::before { content: "📡"; }
+        .icon-holidays::before { content: "🗓️"; }
+        .icon-inventory::before { content: "📋"; }
+        .icon-hackathons::before { content: "🏆"; }
+        .icon-internships::before { content: "💼"; }
+        .icon-contact::before { content: "📞"; }
+        .icon-logout::before { content: "🚪"; }
+        
+        /* Active indicator dot for menu items */
+        .active-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .menu-icon {
+                display: block;
+            }
+
+            .sidebar {
+                width: 80%;
+                max-width: 300px;
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .search-container {
+                margin-top: 40px;
+                margin-bottom: 20px;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 30px 15px;
+            }
+
+            .category-card {
+                width: 100%;
+                max-width: 235px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-container {
+                width: 100%;
+            }
+
+            .category-card {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .search-container {
+                margin-top: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+    </label>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        
+            <div class="logo-container">
+                <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="5" y="5" width="6" height="20" fill="white" />
+                    <rect x="39" y="5" width="6" height="20" fill="white" />
+                    <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
+                    <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
+                    <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
+                    <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
+                    <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
+                </svg>
+                <div class="logo">MACRINE</div>
+            </div>
+    
+        <ul class="menu-items">
+            <li class="menu-item active">
+                <i class="icon-dashboard"></i> Dashboard
+            </li>
+            <li class="menu-item">
+                <i class="icon-profile"></i> Profile
+            </li>
+            <li class="menu-item expandable">
+                <i class="icon-learn"></i> Learn by Practice
+            </li>
+            <li class="menu-item">
+                <i class="icon-wifi"></i> WI-FI
+            </li>
+            <li class="menu-item">
+                <i class="icon-holidays"></i> Work on Holidays
+            </li>
+            <li class="menu-item">
+                <i class="icon-inventory"></i> Inventory
+            </li>
+            <li class="menu-item">
+                <i class="icon-hackathons"></i> Hackathons / Events
+                <span class="active-indicator"></span>
+            </li>
+            <li class="menu-item">
+                <i class="icon-internships"></i> Internships
+            </li>
+            <li class="menu-item">
+                <i class="icon-contact"></i> Contact us
+            </li>
+        </ul>
+        <div class="logout">
+            <i class="icon-logout"></i> Logout
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search">
+        </div>
+
+        <div class="category-grid">
+            <!-- Robotics -->
+            <div class="category-container">
+                <div class="category-title-header">Robotics</div>
+                <div class="category-card dark">
+                    <div class="category-content">
+                        <div class="category-description">build your first Robot!</div>
+                    </div>
+                    <img src="../static/learn/one.png" alt="Robot">
+                </div>
+            </div>
+
+            <!-- IOT -->
+            <div class="category-container">
+                <div class="category-title-header">IOT</div>
+                <div class="category-card purple">
+                    <div class="category-content">
+                        <div class="category-description">build your own Arduino!</div>
+                    </div>
+                    <img src="../static/learn/two.png" alt="Arduino">
+                </div>
+            </div>
+
+            <!-- AI & ML -->
+            <div class="category-container">
+                <div class="category-title-header">AI & ML</div>
+                <div class="category-card dark">
+                    <div class="category-content">
+                        <div class="category-description">build a substitute for the human brain!</div>
+                    </div>
+                    <img src="../static/learn/three.png" alt="AI">
+                </div>
+            </div>
+
+            <!-- UI / UX -->
+            <div class="category-container">
+                <div class="category-title-header">UI / UX</div>
+                <div class="category-card dark">
+                    <div class="category-content">
+                        <!-- Empty content div for consistent styling -->
+                    </div>
+                    <img src="../static/learn/four.png" alt="UI/UX">
+                </div>
+            </div>
+
+            <!-- Autonomous Vehicles -->
+            <div class="category-container">
+                <div class="category-title-header">Autonomous Vehicles</div>
+                <div class="category-card purple">
+                    <div class="category-content">
+                        <div class="category-description">Wanna work with LIDAR?</div>
+                    </div>
+                    <img src="../static/learn/five.png" alt="Autonomous Vehicle">
+                </div>
+            </div>
+
+            <!-- Software Development -->
+            <div class="category-container">
+                <div class="category-title-header">Software Development</div>
+                <div class="category-card dark">
+                    <div class="category-content">
+                        <div class="category-description">Develop you own software!</div>
+                    </div>
+                    <img src="../static/learn/six.png" alt="Software">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

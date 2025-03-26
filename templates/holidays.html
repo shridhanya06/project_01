@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGXperience - Access Pass Form</title>
+    <style>
+        :root {
+            --primary-color: #6a1b9a;
+            --sidebar-bg: #1a1a1a;
+            --main-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #ffffff;
+            --input-bg: #333333;
+            --note-bg: #9c27b0;
+            --border-radius: 15px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--main-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+        
+        /* Mobile First Approach */
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Sidebar Styles for Mobile */
+        .sidebar {
+            width: 100%;
+            background-color: var(--sidebar-bg);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: #ff7043;
+        }
+        
+        .menu-wrapper {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .menu-item {
+            padding: 10px 15px;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .menu-item.active {
+            background-color: #5d1186;
+            color: white;
+        }
+        
+        .menu-item i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .main-content {
+            padding: 15px;
+            width: 100%;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .form-card, .notes-card {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: none;
+            background-color: var(--input-bg);
+            color: white;
+        }
+        
+        .time-input {
+            position: relative;
+        }
+        
+        .time-input input {
+            padding-right: 40px;
+        }
+        
+        .time-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px auto;
+            display: block;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background-color: #7b1fa2;
+        }
+        
+        .notes-card {
+            position: relative;
+            background-color: var(--note-bg);
+            transform: rotate(1deg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .notes-list {
+            list-style-type: none;
+        }
+        
+        .notes-list li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .notes-list li:before {
+            content: attr(data-number) ".";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        /* Tablet Styles */
+        @media screen and (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+            
+            .sidebar {
+                width: 250px;
+                height: 100vh;
+                align-items: flex-start;
+            }
+            
+            .menu-wrapper {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .menu-item {
+                width: 100%;
+                margin: 5px 0;
+                justify-content: flex-start;
+            }
+            
+            .content-container {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: center;
+            }
+            
+            .form-card, .notes-card {
+                max-width: 400px;
+            }
+        }
+        
+        /* Laptop Styles */
+        @media screen and (min-width: 1024px) {
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .sidebar {
+                width: 280px;
+            }
+            
+            .content-container {
+                gap: 40px;
+            }
+            
+            .form-card, .notes-card {
+                max-width: 450px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+        }
+        
+        /* Responsive Typography */
+        @media screen and (max-width: 480px) {
+            .title {
+                font-size: 18px;
+            }
+            
+            .form-control {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <span>&lt;/&gt;</span>KGXperience
+            </div>
+            <div class="menu-wrapper">
+                <a href="#" class="menu-item">
+                    <i>⊞</i>
+                    Dashboard
+                </a>
+                <a href="#" class="menu-item has-submenu">
+                    <i>👤</i>
+                    Profile
+                    <span>›</span>
+                </a>
+                <a href="#" class="menu-item has-submenu">
+                    <i>📊</i>
+                    Learn by Practice
+                    <span>›</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i>📡</i>
+                    WI-FI
+                </a>
+                <a href="#" class="menu-item active">
+                    <i>🗓️</i>
+                    Work on Holidays
+                </a>
+                <a href="#" class="menu-item">
+                    <i>📦</i>
+                    Inventory
+                </a>
+                <a href="#" class="menu-item has-submenu">
+                    <i>🏆</i>
+                    Hackathons / Events
+                    <div class="dot"></div>
+                </a>
+                <a href="#" class="menu-item">
+                    <i>⭐</i>
+                    Internships
+                </a>
+                <a href="#" class="menu-item">
+                    <i>💬</i>
+                    Contact us
+                </a>
+                <a href="#" class="menu-item">
+                    <i>🚪</i>
+                    Logout
+                </a>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="title">KGX ACCESS PASS FORM</div>
+            
+            <div class="content-container">
+                <div class="form-card">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Department / Year</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Roll no</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Purpose</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Entry Time</label>
+                        <div class="time-input">
+                            <input type="text" class="form-control" placeholder="--:-- --">
+                            <div class="time-icon">⏱️</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Exit Time</label>
+                        <div class="time-input">
+                            <input type="text" class="form-control" placeholder="--:-- --">
+                            <div class="time-icon">⏱️</div>
+                        </div>
+                    </div>
+                    
+                    <button class="submit-btn">Submit</button>
+                </div>
+                
+                <div class="notes-card">
+                    <div class="pin"></div>
+                    <div class="fold"></div>
+                    <ul class="notes-list">
+                        <li data-number="1">Submit the form before 6 PM.</li>
+                        <li data-number="2">Fill out and submit the form the day before you need the pass.</li>
+                        <li data-number="3">State the purpose clearly; vague purposes will be rejected.</li>
+                        <li data-number="4">Timing must align with official college hours.</li>
+                        <li data-number="5">Pass requests outside college timing will be denied.</li>
+                        <li data-number="6">The pass is valid only during public holidays.</li>
+                        <li data-number="7">The pass will be verified by the Administrative Officer (AO).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MACRINE - WiFi Access Form</title>
+    <style>
+        :root {
+            --primary-color: #6a1b9a;
+            --sidebar-bg: rgba(26, 26, 26, 0.8);
+            --main-bg: linear-gradient(135deg, #121212, #2c2c2c);
+            --card-bg: rgba(30, 30, 30, 0.6);
+            --text-color: #ffffff;
+            --border-radius: 15px;
+            --input-bg: rgba(51, 51, 51, 0.7);
+            --blur-intensity: 10px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--main-bg);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background: rgba(106, 27, 154, 0.7);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: var(--sidebar-bg);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(var(--blur-intensity));
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .logo {
+            padding: 10px 20px 30px 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: #ff7043;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .menu-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .menu-item i {
+            margin-right: 12px;
+            width: 20px;
+        }
+        
+        .logout {
+            margin-top: auto;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(18, 18, 18, 0.8), rgba(44, 44, 44, 0.8));
+            backdrop-filter: blur(var(--blur-intensity));
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .search-bar {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .content-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        
+        .form-card, .instructions-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            flex: 1;
+            backdrop-filter: blur(var(--blur-intensity));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: var(--input-bg);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        
+        .upload-area {
+            width: 100%;
+            height: 100px;
+            background-color: var(--input-bg);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background-color: #7b1fa2;
+        }
+        
+        .instructions-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .instructions-icon {
+            margin-right: 15px;
+            color: #ffca28;
+            font-size: 24px;
+        }
+        
+        .instructions-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .os-title {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .instruction-step {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .bullet {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .has-submenu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #4caf50;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        /* Tablet Responsiveness */
+        @media screen and (max-width: 1024px) {
+            .content-container {
+                flex-direction: column;
+            }
+
+            .form-card, .instructions-card {
+                width: 100%;
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 250px;
+                transform: translateX(-100%);
+                z-index: 1000;
+                overflow-y: auto;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-bar {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="sidebar">
+        <div class="logo">
+            <span>&lt;/&gt;</span>KGXperience
+        </div>
+        <a href="#" class="menu-item">
+            <i>⊞</i>
+            Dashboard
+        </a>
+        <a href="#" class="menu-item has-submenu">
+            <i>👤</i>
+            Profile
+            <span>›</span>
+        </a>
+        <a href="#" class="menu-item has-submenu">
+            <i>📊</i>
+            Learn by Practice
+            <span>›</span>
+        </a>
+        <a href="#" class="menu-item active">
+            <i>📡</i>
+            WI-FI
+        </a>
+        <a href="#" class="menu-item">
+            <i>🗓️</i>
+            Work on Holidays
+        </a>
+        <a href="#" class="menu-item">
+            <i>📦</i>
+            Inventory
+        </a>
+        <a href="#" class="menu-item has-submenu">
+            <i>🏆</i>
+            Hackathons / Events
+            <div class="dot"></div>
+        </a>
+        <a href="#" class="menu-item">
+            <i>⭐</i>
+            Internships
+        </a>
+        <a href="#" class="menu-item">
+            <i>💬</i>
+            Contact us
+        </a>
+        <a href="#" class="menu-item logout">
+            <i>🚪</i>
+            Logout
+        </a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <div class="title">MACRINE WIFI ACCESS FORM</div>
+            <input type="text" class="search-bar" placeholder="Search">
+        </div>
+        
+        <div class="content-container">
+            <div class="form-card">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label>Department</label>
+                    <input type="text" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label>Roll no</label>
+                    <input type="text" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label>Mac Address</label>
+                    <input type="text" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label>Screenshot (Add image)</label>
+                    <div class="upload-area">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjY2NjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cmVjdCB4PSIzIiB5PSIzIiB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHJ4PSIyIiByeT0iMiI+PC9yZWN0PjxjaXJjbGUgY3g9IjguNSIgY3k9IjguNSIgcj0iMS41Ij48L2NpcmNsZT48cG9seWxpbmUgcG9pbnRzPSIyMSAxNSAxNiAxMCAxIDIxIj48L3BvbHlsaW5lPjwvc3ZnPg==" width="32" alt="Upload">
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button class="submit-btn">Submit</button>
+                </div>
+            </div>
+            
+            <div class="instructions-card">
+                <div class="instructions-header">
+                    <div class="instructions-icon">📁</div>
+                    <div class="instructions-title">Find Your MAC Address!</div>
+                </div>
+                
+                <div class="os-title">macOS:</div>
+                <div class="instruction-step">
+                    <span class="bullet">•</span>
+                    <span>Open "System Settings" (or "System Preferences").</span>
+                </div>
+                <div class="instruction-step">
+                    <span class="bullet">•</span>
+                    <span>Go to "Network" > your network connection (Wi-Fi or Ethernet)></span>
+                </div>
+                <div class="instruction-step">
+                    <span class="bullet">•</span>
+                    <span>"Advanced Settings" (or "Options").</span>
+                </div>
+                <div class="instruction-step">
+                    <span class="bullet">•</span>
+                    <span>Find the MAC address under the "Hardware" tab.</span>
+                </div>
+                
+                <div class="os-title">Windows:</div>
+                <div class="instruction-step">
+                    <span class="bullet">•</span>
+                    <span>Search for and open "Command Prompt".</span>
+                </div>
+                <div class="instruction-step">
+                    <span class="bullet">•</span>
+                    <span>Type ipconfig /all and press Enter.</span>
+                </div>
+                <div class="instruction-step">
+                    <span class="bullet">•</span>
+                    <span>Find the MAC address under "Wireless LAN adapter Wi-Fi" or "Ethernet adapter Ethernet" next to "Physical Address".</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

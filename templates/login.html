@@ -20,7 +20,8 @@
             align-items: center;
             min-height: 100vh;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            padding: 20px;
         }
 
         .container {
@@ -78,11 +79,13 @@
             left: 20px;
             display: flex;
             align-items: center;
+            z-index: 2;
         }
+        
         .logo-svg {
-            width: 40px; /* Adjust size of the SVG */
+            width: 40px;
             height: 40px;
-            margin-right: 10px; /* Spacing between SVG and text */
+            margin-right: 10px;
         }
 
         .logo {
@@ -101,9 +104,9 @@
 
         .login-card {
             background-color: rgba(96, 96, 96, 0);
-            width: 650px;
+            width: 100%;
+            max-width: 650px;
             height: auto;
-            border-width: 800px;
             border-radius: 30px;
             padding: 30px;
             box-shadow: rgba(0, 0, 0, 0.24);
@@ -112,11 +115,11 @@
             flex-direction: column;
             align-items: center;
             position: relative;
+            margin-top: 60px;
         }
 
         .login-header {
-            text-align: left;
-            margin-left: 200px;
+            text-align: center;
             margin-bottom: 50px;
             width: 100%;
         }
@@ -133,16 +136,17 @@
 
         .form-group {
             margin-bottom: 25px;
-            width: 70%;
+            width: 100%;
+            max-width: 500px;
             display: flex;
             justify-content: center;
         }
 
         .form-control {
-            width: 500px;
+            width: 100%;
             padding: 15px;
             border-radius: 8px;
-            border: 0.5px snow rgba(255, 255, 255, 1);
+            border: 0.5px solid rgba(255, 255, 255, 1);
             background-color: rgba(96, 96, 96, 0);
             color: white;
             font-size: 16px;
@@ -156,14 +160,13 @@
 
         .password-field {
             position: relative;
-            width: 70%;
-            display: flex;
-            justify-content: center;
+            width: 100%;
+            max-width: 500px;
         }
 
         .password-toggle {
             position: absolute;
-            right: calc(50% - 185px);
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: #FFFFFF;
@@ -175,8 +178,9 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
-            margin-left: 90px;
-            width: 500px;
+            width: 100%;
+            max-width: 500px;
+            padding: 0 15px;
         }
 
         .remember-me input {
@@ -191,7 +195,8 @@
         }
 
         .btn-login {
-            width: 400px;
+            width: 100%;
+            max-width: 400px;
             padding: 15px;
             background-color: #851B97;
             color: white;
@@ -201,6 +206,9 @@
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-login:hover {
@@ -210,6 +218,7 @@
         .footer {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             margin-top: 20px;
             font-size: 14px;
             color: #aaa;
@@ -219,12 +228,107 @@
         .footer a {
             color: #aaa;
             text-decoration: none;
-            margin: 0 10px;
+            margin: 5px 10px;
             transition: color 0.3s;
         }
 
         .footer a:hover {
             color: white;
+        }
+
+        /* Media Queries */
+        @media screen and (max-width: 768px) {
+            .login-card {
+                max-width: 90%;
+                padding: 20px;
+            }
+            
+            .form-group, .password-field, .remember-me {
+                max-width: 100%;
+            }
+            
+            .btn-login {
+                max-width: 100%;
+            }
+            
+            .circle-1 {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .circle-2 {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .login-card {
+                border-radius: 20px;
+                padding: 15px;
+            }
+            
+            .login-header {
+                margin-bottom: 30px;
+            }
+            
+            .login-header h2 {
+                font-size: 20px;
+            }
+            
+            .form-control {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .btn-login {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .footer {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .circle-1 {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .circle-2 {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .logo-container {
+                top: 10px;
+                left: 10px;
+            }
+            
+            .logo-svg {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .logo {
+                font-size: 16px;
+            }
+        }
+
+        @media screen and (max-height: 600px) {
+            .login-card {
+                margin-top: 80px;
+                margin-bottom: 20px;
+            }
+            
+            .login-header {
+                margin-bottom: 20px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
         }
     </style>
 </head>
@@ -241,38 +345,37 @@
         </svg>
         <div class="logo">MACRINE</div>
     </div>
+    
+    <div class="login-card">
+        <div class="background-circle circle-1"></div>
+        <div class="background-circle circle-2"></div>
         
-        <div class="login-card">
-            <div class="background-circle circle-1"></div>
-            <div class="background-circle circle-2"></div>
-            
-            <div class="login-header">
-                <h2>Login</h2>
-                <p>Glad you're back!</p>
+        <div class="login-header">
+            <h2>Login</h2>
+            <p>Glad you're back!</p>
+        </div>
+        
+        <form>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Username">
             </div>
             
-            <form>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Username">
-                </div>
-                
-                <div class="form-group password-field">
-                    <input type="password" class="form-control" placeholder="Password">
-                    <span class="password-toggle">&#128065;</span>
-                </div>
-                
-                <div class="remember-me">
-                    <input type="checkbox" id="remember-me">
-                    <label for="remember-me">Remember me</label>
-                </div>
-                <a href="landing.html" class="btn-login">Login</a>
-            </form>
-            
-            <div class="footer">
-                <a href="#">Terms & Conditions</a>
-                <a href="#">Support</a>
-                <a href="#">Customer Care</a>
+            <div class="form-group password-field">
+                <input type="password" class="form-control" placeholder="Password">
+                <span class="password-toggle">&#128065;</span>
             </div>
+            
+            <div class="remember-me">
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me">Remember me</label>
+            </div>
+            <a href="landing.html" class="btn-login">Login</a>
+        </form>
+        
+        <div class="footer">
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Support</a>
+            <a href="#">Customer Care</a>
         </div>
     </div>
 </body>
