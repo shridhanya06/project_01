@@ -21,7 +21,7 @@
             overflow-x: hidden;
         }
 
-        /* Toggle for mobile menu */
+        
         #menu-toggle {
             display: none;
         }
@@ -96,9 +96,18 @@
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
+            padding: 0;
             cursor: pointer;
             transition: background-color 0.3s;
+        }
+
+        .menu-item a {
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 20px;
         }
 
         .menu-item:hover {
@@ -131,11 +140,22 @@
         .menu-item.expandable.active {
             border-left: 3px solid #ff9900;
         }
+
+        .menu-item.expandable a {
+            color: white;
+        }
         
         .logout {
             position: absolute;
             bottom: 20px;
             left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logout a {
+            text-decoration: none;
+            color: white;
             display: flex;
             align-items: center;
         }
@@ -270,14 +290,7 @@
         .icon-logout::before { content: "🚪"; }
         
         /* Active indicator dot for menu items */
-        .active-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: #4CAF50;
-            border-radius: 50%;
-            margin-left: 10px;
-        }
+       
 
         /* Media Queries for responsiveness */
         @media (max-width: 768px) {
@@ -347,52 +360,51 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        
-            <div class="logo-container">
-                <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="5" y="5" width="6" height="20" fill="white" />
-                    <rect x="39" y="5" width="6" height="20" fill="white" />
-                    <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
-                    <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
-                    <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
-                    <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
-                    <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
-                </svg>
-                <div class="logo">MACRINE</div>
-            </div>
-    
+        <div class="logo-container">
+            <svg class="logo-svg" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="6" height="20" fill="white" />
+                <rect x="39" y="5" width="6" height="20" fill="white" />
+                <path d="M13 15L25 5L37 15L25 25L13 15Z" fill="#FF1212" />
+                <path d="M13 15L25 5L25 15L13 15Z" fill="#34F022" />
+                <path d="M25 5L37 15L25 15L25 5Z" fill="#3478F0" />
+                <path d="M13 15L25 25L25 15L13 15Z" fill="#F0B134" />
+                <path d="M25 25L37 15L25 15L25 25Z" fill="#9333EA" />
+            </svg>
+            <div class="logo">MACRINE</div>
+        </div>
+
         <ul class="menu-items">
             <li class="menu-item active">
-                <i class="icon-dashboard"></i> Dashboard
+                <a href="landing.html"><i class="icon-dashboard"></i> Dashboard</a>
             </li>
             <li class="menu-item">
-                <i class="icon-profile"></i> Profile
+                <a href="profile.html"><i class="icon-profile"></i> Profile</a>
             </li>
             <li class="menu-item expandable">
-                <i class="icon-learn"></i> Learn by Practice
+                <a href="learn.html"><i class="icon-learn"></i> Learn by Practice</a>
             </li>
             <li class="menu-item">
-                <i class="icon-wifi"></i> WI-FI
+                <a href="wifi.html"><i class="icon-wifi"></i> WI-FI</a>
             </li>
             <li class="menu-item">
-                <i class="icon-holidays"></i> Work on Holidays
+                <a href="holidays.html"><i class="icon-holidays"></i> Work on Holidays</a>
             </li>
             <li class="menu-item">
-                <i class="icon-inventory"></i> Inventory
+                <a href="inventory.html"><i class="icon-inventory"></i> Inventory</a>
             </li>
             <li class="menu-item">
-                <i class="icon-hackathons"></i> Hackathons / Events
+                <a href="hackathon.html"><i class="icon-hackathons"></i> Hackathons / Events</a>
                 <span class="active-indicator"></span>
             </li>
             <li class="menu-item">
-                <i class="icon-internships"></i> Internships
+                <a href="internships.html"><i class="icon-internships"></i> Internships</a>
             </li>
             <li class="menu-item">
-                <i class="icon-contact"></i> Contact us
+                <a href="contact.html"><i class="icon-contact"></i> Contact us</a>
             </li>
         </ul>
         <div class="logout">
-            <i class="icon-logout"></i> Logout
+            <a href="logout.html"><i class="icon-logout"></i> Logout</a>
         </div>
     </div>
 
